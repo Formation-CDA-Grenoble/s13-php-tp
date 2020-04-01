@@ -45,7 +45,7 @@
                         </td>
                         <td>
                             <button class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash-alt"></i></small>
+                                <i class="fas fa-trash-alt"></i>
                             </button>
                         </td>
                     </tr>
@@ -68,7 +68,7 @@
                         </td>
                         <td>
                             <button class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash-alt"></i></small>
+                                <i class="fas fa-trash-alt"></i>
                             </button>
                         </td>
                     </tr>
