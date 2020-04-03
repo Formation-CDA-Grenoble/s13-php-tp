@@ -17,6 +17,13 @@ if (isset($_GET['order']) && isset($_GET['order_direction'])) {
 }
 
 
+if (isset($_GET['editId'])) {
+    $editId = $_GET['editId'];
+} else {
+    $editId = null;
+}
+
+
 $DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=videogames;charset=UTF8;','root','root', array(PDO::ATTR_PERSISTENT=>true));
 $statement = $DB->query("
 SELECT
@@ -120,39 +127,85 @@ $platforms = $statement->fetchAll(PDO::FETCH_OBJ);
                 </thead>
                 <tbody>
                     <?php foreach($games as $game): ?>
-                    <tr>
-                        <th scope="row">
-                            <?= $game->id ?>
-                        </th>
-                        <td>
-                            <a href="<?= $game->link ?>" target="_blank">
-                                <?= $game->title ?>
-                            </a>
-                        </td>
-                        <td>
-                            <?= (new DateTime($game->release_date))->format('d M Y') ?>
-                        </td>
-                        <td>
-                            <a href="<?= $game->developer_link ?>" target="_blank">
-                                <?= $game->developer_name ?>
-                            </a>
-                        </td>
-                        <td>
-                            <a href="<?= $game->platform_link ?>" target="_blank">
-                                <?= $game->platform_name ?>
-                            </a>
-                        </td>
-                        <td>
-                            <button class="btn btn-primary btn-sm">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
-                    </tr>
+                        <?php if ($editId === $game->id): ?>
+                        <form method="post" action="actions/update-game.php">
+                            <tr>
+                                <th scope="row">
+                                    <?= $game->id ?>
+                                    <input type="hidden" name="id" value="<?= $game->id ?>" />
+                                </th>
+                                <td>
+                                    <input type="text" name="title" placeholder="Title" value="<?= $game->title ?>" />
+                                    <br />
+                                    <input type="text" name="link" placeholder="External link" value="<?= $game->link ?>" />
+                                </td>
+                                <td>
+                                    <input type="date" name="release_date" value="<?= $game->release_date ?>" />
+                                </td>
+                                <td>
+                                    <select name="developer_id">
+                                        <?php foreach($developers as $developer): ?>
+                                        <option value="<?= $developer->id ?>" <?= $developer->id === $game->developer_id ? 'selected="selected"' : '' ?>>
+                                            <?= $developer->name ?>
+                                        </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="platform_id">
+                                        <?php foreach($platforms as $platform): ?>
+                                        <option value="<?= $platform->id ?>"  <?= $platform->id === $game->platform_id ? 'selected="selected"' : '' ?>>
+                                            <?= $platform->name ?>
+                                        </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </form>
+                        <?php else: ?>
+                        <tr>
+                            <th scope="row">
+                                <?= $game->id ?>
+                            </th>
+                            <td>
+                                <a href="<?= $game->link ?>" target="_blank">
+                                    <?= $game->title ?>
+                                </a>
+                            </td>
+                            <td>
+                                <?= (new DateTime($game->release_date))->format('d M Y') ?>
+                            </td>
+                            <td>
+                                <a href="<?= $game->developer_link ?>" target="_blank">
+                                    <?= $game->developer_name ?>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="<?= $game->platform_link ?>" target="_blank">
+                                    <?= $game->platform_name ?>
+                                </a>
+                            </td>
+                            <td>
+                                <form>
+                                    <input type="hidden" name="editId" value="<?= $game->id ?>" />
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <?php endif; ?>
                     <?php endforeach; ?>
 
                     <form method="post" action="actions/create-game.php">
