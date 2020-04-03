@@ -4,8 +4,6 @@ $DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=videogames;charset=UTF8;','
 $statement = $DB->query("SELECT * FROM `game`");
 $games = $statement->fetchAll(PDO::FETCH_OBJ);
 
-var_dump($games); die();
-
 ?>
 
 
@@ -37,12 +35,19 @@ var_dump($games); die();
                     </tr>
                 </thead>
                 <tbody>
+                    <?php foreach($games as $game): ?>
                     <tr>
-                        <th scope="row">1</th>
+                        <th scope="row">
+                            <?= $game->id ?>
+                        </th>
                         <td>
-                            <a href="https://en.wikipedia.org/wiki/Populous_(video_game)">Populous</a>
+                            <a href="<?= $game->link ?>" target="_blank">
+                                <?= $game->title ?>
+                            </a>
                         </td>
-                        <td>5 june 1989</td>
+                        <td>
+                            <?= (new DateTime($game->release_date))->format('d M Y') ?>
+                        </td>
                         <td>
                             <a href="https://en.wikipedia.org/wiki/Bullfrog_Productions">Bullfrog Productions</a>
                         </td>
@@ -60,29 +65,8 @@ var_dump($games); die();
                             </button>
                         </td>
                     </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>
-                            <a href="https://en.wikipedia.org/wiki/Populous_(video_game)">Doom</a>
-                        </td>
-                        <td>10 December 1993</td>
-                        <td>
-                            <a href="https://en.wikipedia.org/wiki/Bullfrog_Productions">id Software</a>
-                        </td>
-                        <td>
-                            <a href="https://en.wikipedia.org/wiki/MS-DOS">MS-DOS</a>
-                        </td>
-                        <td>
-                            <button class="btn btn-primary btn-sm">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </td>
-                        <td>
-                            <button class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
-                    </tr>
+                    <?php endforeach; ?>
+
                     <form>
                         <tr>
                             <th scope="row"></th>
