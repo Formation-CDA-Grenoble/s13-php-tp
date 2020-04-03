@@ -1,5 +1,14 @@
 <?php
 
+session_start();
+if (isset($_SESSION['errorMessage'])) {
+    $errorMessage = $_SESSION['errorMessage'];
+    unset($_SESSION['errorMessage']);
+} else {
+    $errorMessage = null;
+}
+
+
 if (isset($_GET['order']) && isset($_GET['order_direction'])) {
     $orderBy = $_GET['order'];
     $orderDirection = $_GET['order_direction'];
@@ -63,6 +72,11 @@ $platforms = $statement->fetchAll(PDO::FETCH_OBJ);
             <div class="card-header">
                 <h1 class="mt-4 mb-4">My beautiful video games</h1>
             </div>
+            <?php if (!is_null($errorMessage)): ?>
+            <div class="alert alert-danger" role="alert">
+                <?= $errorMessage ?>
+            </div>
+            <?php endif; ?>
             <table class="table table-striped">
                 <thead>
                     <tr>
