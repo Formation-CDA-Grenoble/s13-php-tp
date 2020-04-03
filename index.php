@@ -1,7 +1,14 @@
-<?php 
+<?php
+
+if (isset($_GET['order'])) {
+    $orderBy = $_GET['order'];
+} else {
+    $orderBy = 'id';
+}
+
 
 $DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=videogames;charset=UTF8;','root','root', array(PDO::ATTR_PERSISTENT=>true));
-$statement = $DB->query('
+$statement = $DB->query("
 SELECT
 	game.id,
     game.title, 
@@ -19,7 +26,8 @@ SELECT
 FROM game 
 JOIN platform ON platform.id = game.platform_id
 JOIN developer ON developer.id = game.developer_id
-');
+ORDER BY $orderBy ASC
+");
 $games = $statement->fetchAll(PDO::FETCH_OBJ);
 
 // var_dump($games); die();
@@ -45,11 +53,51 @@ $games = $statement->fetchAll(PDO::FETCH_OBJ);
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th scope="col"># <i class="fas fa-sort-down"></i></th>
-                        <th scope="col">Title <i class="fas fa-sort-down"></i></th>
-                        <th scope="col">Release date <i class="fas fa-sort-down"></i></th>
-                        <th scope="col">Developer <i class="fas fa-sort-down"></i></th>
-                        <th scope="col">Platform <i class="fas fa-sort-down"></i></th>
+                        <th scope="col">
+                            #
+                            <form class="d-inline">
+                                <input type="hidden" name="order" value="id" />
+                                <button type="submit">
+                                    <i class="fas fa-sort-down"></i>
+                                </button>
+                            </form>
+                        </th>
+                        <th scope="col">
+                            Title
+                            <form class="d-inline">
+                                <input type="hidden" name="order" value="title" />
+                                <button type="submit">
+                                    <i class="fas fa-sort-down"></i>
+                                </button>
+                            </form>
+                        </th>
+                        <th scope="col">
+                            Release date
+                            <form class="d-inline">
+                                <input type="hidden" name="order" value="release_date" />
+                                <button type="submit">
+                                    <i class="fas fa-sort-down"></i>
+                                </button>
+                            </form>
+                        </th>
+                        <th scope="col">
+                            Developer 
+                            <form class="d-inline">
+                                <input type="hidden" name="order" value="developer_name" />
+                                <button type="submit">
+                                    <i class="fas fa-sort-down"></i>
+                                </button>
+                            </form>
+                        </th>
+                        <th scope="col">
+                            Platform 
+                            <form class="d-inline">
+                                <input type="hidden" name="order" value="platform_name" />
+                                <button type="submit">
+                                    <i class="fas fa-sort-down"></i>
+                                </button>
+                            </form>
+                        </th>
                         <th>Edit</th>
                         <th>Delete</th>
                     </tr>
@@ -74,7 +122,7 @@ $games = $statement->fetchAll(PDO::FETCH_OBJ);
                             </a>
                         </td>
                         <td>
-                        <a href="<?= $game->platform_link ?>" target="_blank">
+                            <a href="<?= $game->platform_link ?>" target="_blank">
                                 <?= $game->platform_name ?>
                             </a>
                         </td>
