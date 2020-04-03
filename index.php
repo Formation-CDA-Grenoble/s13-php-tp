@@ -1,9 +1,11 @@
 <?php
 
-if (isset($_GET['order'])) {
+if (isset($_GET['order']) && isset($_GET['order_direction'])) {
     $orderBy = $_GET['order'];
+    $orderDirection = $_GET['order_direction'];
 } else {
     $orderBy = 'id';
+    $orderDirection = 'ASC';
 }
 
 
@@ -26,7 +28,7 @@ SELECT
 FROM game 
 JOIN platform ON platform.id = game.platform_id
 JOIN developer ON developer.id = game.developer_id
-ORDER BY $orderBy ASC
+ORDER BY $orderBy $orderDirection
 ");
 $games = $statement->fetchAll(PDO::FETCH_OBJ);
 
@@ -55,48 +57,38 @@ $games = $statement->fetchAll(PDO::FETCH_OBJ);
                     <tr>
                         <th scope="col">
                             #
-                            <form class="d-inline">
-                                <input type="hidden" name="order" value="id" />
-                                <button type="submit">
-                                    <i class="fas fa-sort-down"></i>
-                                </button>
-                            </form>
+                            <?php
+                                $criterion = 'id';
+                                include 'templates/sort-button.php';
+                            ?>
                         </th>
                         <th scope="col">
                             Title
-                            <form class="d-inline">
-                                <input type="hidden" name="order" value="title" />
-                                <button type="submit">
-                                    <i class="fas fa-sort-down"></i>
-                                </button>
-                            </form>
+                            <?php
+                                $criterion = 'title';
+                                include 'templates/sort-button.php';
+                            ?>
                         </th>
                         <th scope="col">
                             Release date
-                            <form class="d-inline">
-                                <input type="hidden" name="order" value="release_date" />
-                                <button type="submit">
-                                    <i class="fas fa-sort-down"></i>
-                                </button>
-                            </form>
+                            <?php
+                                $criterion = 'release_date';
+                                include 'templates/sort-button.php';
+                            ?>
                         </th>
                         <th scope="col">
                             Developer 
-                            <form class="d-inline">
-                                <input type="hidden" name="order" value="developer_name" />
-                                <button type="submit">
-                                    <i class="fas fa-sort-down"></i>
-                                </button>
-                            </form>
+                            <?php
+                                $criterion = 'developer_name';
+                                include 'templates/sort-button.php';
+                            ?>
                         </th>
                         <th scope="col">
                             Platform 
-                            <form class="d-inline">
-                                <input type="hidden" name="order" value="platform_name" />
-                                <button type="submit">
-                                    <i class="fas fa-sort-down"></i>
-                                </button>
-                            </form>
+                            <?php
+                                $criterion = 'platform_name';
+                                include 'templates/sort-button.php';
+                            ?>
                         </th>
                         <th>Edit</th>
                         <th>Delete</th>
