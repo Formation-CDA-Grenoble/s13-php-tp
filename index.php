@@ -32,6 +32,17 @@ ORDER BY $orderBy $orderDirection
 ");
 $games = $statement->fetchAll(PDO::FETCH_OBJ);
 
+$statement = $DB->query("
+SELECT * FROM `developer`
+");
+$developers = $statement->fetchAll(PDO::FETCH_OBJ);
+
+$statement = $DB->query("
+SELECT * FROM `platform`
+");
+$platforms = $statement->fetchAll(PDO::FETCH_OBJ);
+
+
 // var_dump($games); die();
 
 ?>
@@ -131,7 +142,7 @@ $games = $statement->fetchAll(PDO::FETCH_OBJ);
                     </tr>
                     <?php endforeach; ?>
 
-                    <form>
+                    <form method="post" action="actions/create-game.php">
                         <tr>
                             <th scope="row"></th>
                             <td>
@@ -143,15 +154,21 @@ $games = $statement->fetchAll(PDO::FETCH_OBJ);
                                 <input type="date" name="release_date" />
                             </td>
                             <td>
-                                <select name="developer">
-                                    <option value="1">Bullfrog Productions</option>
-                                    <option value="2">id Software</option>
+                                <select name="developer_id">
+                                    <?php foreach($developers as $developer): ?>
+                                    <option value="<?= $developer->id ?>">
+                                        <?= $developer->name ?>
+                                    </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </td>
                             <td>
-                                <select name="platform">
-                                    <option value="1">SNES</option>
-                                    <option value="2">MS-DOS</option>
+                                <select name="platform_id">
+                                    <?php foreach($platforms as $platform): ?>
+                                    <option value="<?= $platform->id ?>">
+                                        <?= $platform->name ?>
+                                    </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </td>
                             <td>
