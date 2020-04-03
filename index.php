@@ -1,8 +1,28 @@
 <?php 
 
 $DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=videogames;charset=UTF8;','root','root', array(PDO::ATTR_PERSISTENT=>true));
-$statement = $DB->query("SELECT * FROM `game`");
+$statement = $DB->query('
+SELECT
+	game.id,
+    game.title, 
+    game.release_date, 
+    game.link, 
+    
+    platform.id AS platform_id,
+    platform.name AS platform_name,
+    platform.link AS platform_link,
+    
+    developer.id AS developer_id,
+    developer.name AS developer_name,
+    developer.link AS developer_link
+    
+FROM game 
+JOIN platform ON platform.id = game.platform_id
+JOIN developer ON developer.id = game.developer_id
+');
 $games = $statement->fetchAll(PDO::FETCH_OBJ);
+
+// var_dump($games); die();
 
 ?>
 
@@ -49,10 +69,14 @@ $games = $statement->fetchAll(PDO::FETCH_OBJ);
                             <?= (new DateTime($game->release_date))->format('d M Y') ?>
                         </td>
                         <td>
-                            <a href="https://en.wikipedia.org/wiki/Bullfrog_Productions">Bullfrog Productions</a>
+                            <a href="<?= $game->developer_link ?>" target="_blank">
+                                <?= $game->developer_name ?>
+                            </a>
                         </td>
                         <td>
-                            <a href="https://en.wikipedia.org/wiki/Amiga">Amiga</a>
+                        <a href="<?= $game->platform_link ?>" target="_blank">
+                                <?= $game->platform_name ?>
+                            </a>
                         </td>
                         <td>
                             <button class="btn btn-primary btn-sm">
