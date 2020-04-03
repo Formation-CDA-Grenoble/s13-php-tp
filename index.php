@@ -1,3 +1,14 @@
+<?php 
+
+$DB = new PDO('mysql:host=127.0.0.1;port=3306;dbname=videogames;charset=UTF8;','root','root', array(PDO::ATTR_PERSISTENT=>true));
+$statement = $DB->query("SELECT * FROM `game`");
+$games = $statement->fetchAll(PDO::FETCH_OBJ);
+
+var_dump($games); die();
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
