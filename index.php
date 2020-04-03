@@ -1,13 +1,12 @@
 <?php
 
 session_start();
-if (isset($_SESSION['errorMessage'])) {
-    $errorMessage = $_SESSION['errorMessage'];
-    unset($_SESSION['errorMessage']);
+if (!isset($_SESSION['messages'])) {
+    $_SESSION['messages'] = [];
 } else {
-    $errorMessage = null;
+    $messages = $_SESSION['messages'];
+    $_SESSION['messages'] = [];
 }
-
 
 if (isset($_GET['order']) && isset($_GET['order_direction'])) {
     $orderBy = $_GET['order'];
@@ -72,11 +71,11 @@ $platforms = $statement->fetchAll(PDO::FETCH_OBJ);
             <div class="card-header">
                 <h1 class="mt-4 mb-4">My beautiful video games</h1>
             </div>
-            <?php if (!is_null($errorMessage)): ?>
-            <div class="alert alert-danger" role="alert">
-                <?= $errorMessage ?>
+            <?php foreach($messages as $message): ?>
+            <div class="alert alert-<?= $message['type'] ?>" role="alert">
+                <?= $message['message'] ?>
             </div>
-            <?php endif; ?>
+            <?php endforeach; ?>
             <table class="table table-striped">
                 <thead>
                     <tr>
